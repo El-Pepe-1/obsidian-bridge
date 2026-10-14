@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChatGPT → Obsidian</title>
+<style>
+body{background:#17151c;color:#eee;font:16px system-ui,sans-serif;max-width:650px;margin:30px auto;padding:16px}main{background:#26222e;border-radius:18px;padding:22px}label{display:block;margin-top:16px}input,textarea{display:block;box-sizing:border-box;width:100%;margin-top:6px;padding:12px;border:1px solid #665c73;border-radius:9px;background:#19161f;color:white;font:inherit}textarea{min-height:150px}button{background:#8956d6;border:0;border-radius:10px;color:white;font:inherit;padding:14px;width:100%;margin-top:20px}small{display:block;margin-top:18px;color:#bbb}
+</style>
+</head><body><main>
+<h1>ChatGPT → Obsidian</h1>
+<p>Создай заметку через Advanced URI.</p>
+<label>Название заметки<input id="title" value="Тест ChatGPT"></label>
+<label>Папка (необязательно)<input id="folder" placeholder="Учёба/Конспекты"></label>
+<label>Хранилище (необязательно)<input id="vault" placeholder="Название vault"></label>
+<label>Содержимое<textarea id="content"># Тест ChatGPT
+
+Привет! Эта заметка создана через Advanced URI.</textarea></label>
+<button id="open">Создать заметку в Obsidian</button>
+<small>Требуется плагин Advanced URI. Не передавай секреты через URL: параметры ссылки могут сохраняться в истории браузера. Для очень длинных заметок длины URL может не хватить.</small>
+</main><script>
+const params=new URLSearchParams(location.search);
+for(const key of ['title','folder','vault','content']){if(params.has(key))document.getElementById(key).value=params.get(key)}
+document.getElementById('open').addEventListener('click',()=>{
+const title=document.getElementById('title').value.trim()||'Заметка ChatGPT';
+const folder=document.getElementById('folder').value.trim().replace(/^\/+|\/+$/g,'');
+const vault=document.getElementById('vault').value.trim();
+const data=document.getElementById('content').value;
+const query=new URLSearchParams({filepath:(folder?folder+'/':'')+title+'.md',data,mode:'new'});
+if(vault)query.set('vault',vault);
+location.href='obsidian://advanced-uri?'+query.toString();
+});
+</script></body></html>
